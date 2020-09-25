@@ -1,5 +1,5 @@
-import React, {useState} from 'react'
-const Blog = ({ blog, increaseLikes, removeBlog}) => {
+import React, {useState} from 'react';
+const Blog = ({blog, increaseLikes, removeBlog}) => {
 	const [details, setDetails] = useState(false);
 	const blogStyle = {
 		paddingTop: 10,
@@ -7,23 +7,23 @@ const Blog = ({ blog, increaseLikes, removeBlog}) => {
 		border: 'solid',
 		borderWidth: 1,
 		marginBottom: 5
-	}
-	const toggleDetails = () =>{
+	};
+	const toggleDetails = () => {
 		setDetails(!details);
-	}
-	const handleLikes = () =>{
+	};
+	const handleLikes = () => {
 		const updatedBlog = {
 			title: blog.title,
 			author: blog.author,
 			url: blog.url,
-			likes: blog.likes+1, 
+			likes: blog.likes+1,
 			user: blog.user
-		}
+		};
 		increaseLikes(blog.id, updatedBlog);
-	}
-	const handleRemove = () =>{
+	};
+	const handleRemove = () => {
 		removeBlog(blog);
-	}
+	};
 	const display = () => {
 		if(details){
 			return(
@@ -35,20 +35,20 @@ const Blog = ({ blog, increaseLikes, removeBlog}) => {
 					<p>{blog.user.name}</p>
 					<button onClick = {handleRemove}>remove</button>
 				</div>
-			)
+			);
 		}else{
 			return(
 				<div>
 					{blog.title} {blog.author}
 					<button onClick = {toggleDetails}>show</button>
-		  		</div>
-			)
+				</div>
+			);
 		}
-	}
+	};
 	return (
-	  	<div style={blogStyle}>
-			  {display()}
+		<div style={blogStyle}>
+			{display()}
 		</div>
-	)}
+	);};
 
-export default Blog
+export default Blog;

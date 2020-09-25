@@ -1,112 +1,134 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import Blog from './components/Blog';
 import blogService from './services/blogs';
 import loginService from './services/login';
 import Notification from './components/Notification';
-import BlogForm from './components/BlogForm'; 
+import BlogForm from './components/BlogForm';
 import Togglable from './components/Togglable';
 import LoginForm from './components/LoginForm';
-import './index.css'
+import './index.css';
 const App = () => {
-	const [blogs, setBlogs] = useState([])
+	const [blogs, setBlogs] = useState([]);
 	const [user, setUser] = useState(null);
 	const [message, setMessage] = useState(null);
 	const [type, setType] = useState(null);
+	const [password, setPassword] = useState('');
+	const [username, setUsername] = useState('');
 
 	useEffect(() => {
 		blogService.getAll().then(blogs =>
 			setBlogs( blogs.sort((a, b) => b.likes - a.likes ))
-		)  
-	}, [])
+		);
+	}, []);
 	useEffect(() => {
-		const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
+		const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser');
 		if (loggedUserJSON) {
-			const user = JSON.parse(loggedUserJSON)
-			setUser(user)
-			blogService.setToken(user.token)
-		}
-	}, [])
-
-	const sendLogin = async (loginInfo) =>{
-		try {
-			const user = await loginService.login(loginInfo)
-			window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user)) 
+			const user = JSON.parse(loggedUserJSON);
 			setUser(user);
-			blogService.setToken(user.token)
-		}catch(exception){
-			setMessage('Wrong credentials')
-			setType('error')
-			setTimeout(() => {
-				setMessage(null)
-			},5000)
+			blogService.setToken(user.token);
 		}
-	}
+	}, []);
+
+	const handleLogin = async (e) => {
+		e.preventDefault();
+		try {
+			const loginInfo = {
+				username, password,
+			};
+			setUsername('');
+			setPassword('');
+			const user = await loginService.login(loginInfo);
+			window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user));
+			setUser(user);
+			blogService.setToken(user.token);
+		}catch(exception){
+			setMessage('Wrong credentials');
+			setType('error');
+			setTimeout(() => {
+				setMessage(null);
+			},5000);
+		}
+	};
 	const handleLogout = () => {
-		window.localStorage.removeItem('loggedBlogappUser')
+		window.localStorage.removeItem('loggedBlogappUser');
 		setUser(null);
-	}
+	};
 
 	const removeBlog = async blog => {
 		try {
-			if (window.confirm(`Remove ${blog.title} by ${blog.author}`)) { 
+			if (window.confirm(`Remove ${blog.title} by ${blog.author}`)) {
 				await blogService.remove(blog.id);
-				setMessage(`Removed ${blog.title} by ${blog.author}`)
-				setType('success')
+				setMessage(`Removed ${blog.title} by ${blog.author}`);
+				setType('success');
 				setTimeout(() => {
-					setMessage(null)
-				},5000)
+					setMessage(null);
+				},5000);
 				setBlogs(blogs.filter(b => b.id !==blog.id));
 			}
 		}catch(exception){
-			setMessage('Wrong credentials')
-			setType('error')
+			setMessage('Wrong credentials');
+			setType('error');
 			setTimeout(() => {
-				setMessage(null)
-			},5000)
+				setMessage(null);
+			},5000);
 		}
-	}
+	};
 
 	const blogFormRef = useRef();
 
 	const createBlog = async (newBlog) => {
 		try{
 			blogFormRef.current.toggleVisibility();
-			const response = await blogService.create(newBlog)
-			setMessage(`a new blog ${newBlog.title} by ${newBlog.author}`)
-			setType('success')
+			const response = await blogService.create(newBlog);
+			setMessage(`a new blog ${newBlog.title} by ${newBlog.author}`);
+			setType('success');
 			setTimeout(() => {
-				setMessage(null)
-			},5000)
+				setMessage(null);
+			},5000);
 			setBlogs(blogs.concat(response));
 		}catch(error){
-			setMessage(`${error}`)
-			setType('error')
+			setMessage(`${error}`);
+			setType('error');
 			setTimeout(() => {
-				setMessage(null)
-			},5000)
+				setMessage(null);
+			},5000);
 		}
-	}
+	};
+
+
+	const handlePasswordChange = (e) => {
+		setPassword(e.target.value);
+	};
+	const handleUserChange = (e) => {
+		setUsername(e.target.value);
+	};
 
 	const increaseLikes = async (id, updatedBlog) => {
 		try{
-			const response = await blogService.update(id, updatedBlog)
+			const response = await blogService.update(id, updatedBlog);
 			const index = blogs.findIndex(blog => blog.id === id);
 			let copy = [...blogs];
 			copy[index] = response;
 			setBlogs(copy);
 		}catch(error){
-			setMessage(`${error}`)
-			setType('error')
+			setMessage(`${error}`);
+			setType('error');
 			setTimeout(() => {
-				setMessage(null)
-			},5000)
+				setMessage(null);
+			},5000);
 		}
-	}
+	};
 
-	const display = () =>{
+	const display = () => {
 		if(user === null)
 			return(
-				<LoginForm sendLogin = {sendLogin}/>
+				<LoginForm
+					handleLogin = {handleLogin}
+					username = {username}
+					password = {password}
+					handlePasswordChange = {handlePasswordChange}
+					handleUserChange = {handleUserChange}
+				/>
 			);
 		else{
 			return(
@@ -121,18 +143,18 @@ const App = () => {
 						<Blog key={blog.id} blog={blog} increaseLikes = {increaseLikes} removeBlog = {removeBlog}/>
 					)}
 				</>
-			)
+			);
 		}
-	}
+	};
 
 	return (
 		<div>
 			<Notification message={message} type = {type}/>
 			{display()}
 		</div>
-	)
-}
+	);
+};
 
 
 
-export default App
+export default App;
