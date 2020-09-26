@@ -27,18 +27,18 @@ const Blog = ({blog, increaseLikes, removeBlog}) => {
 	const display = () => {
 		if(details){
 			return(
-				<div>
+				<div className = 'blog'>
 					{blog.title} {blog.author}
 					<button onClick = {toggleDetails}>hide</button>
-					<p>{blog.url}</p>
-					<p>likes {blog.likes}<button onClick = {handleLikes}>likes</button></p>
+					<p className = 'url'>{blog.url}</p>
+					<p className = 'likes'>likes {blog.likes}<button className = 'likeButton' onClick = {handleLikes}>likes</button></p>
 					<p>{blog.user.name}</p>
 					<button onClick = {handleRemove}>remove</button>
 				</div>
 			);
 		}else{
 			return(
-				<div>
+				<div className = 'blog'>
 					{blog.title} {blog.author}
 					<button onClick = {toggleDetails}>show</button>
 				</div>
