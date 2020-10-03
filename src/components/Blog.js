@@ -1,5 +1,9 @@
 import React, {useState} from 'react';
-const Blog = ({blog, increaseLikes, removeBlog}) => {
+import {useDispatch} from 'react-redux';
+import {remove, vote} from '../reducers/blogReducer';
+import {set} from '../reducers/notificationReducer';
+const Blog = ({blog}) => {
+	const dispatch = useDispatch();
 	const [details, setDetails] = useState(false);
 	const blogStyle = {
 		paddingTop: 10,
@@ -24,6 +28,40 @@ const Blog = ({blog, increaseLikes, removeBlog}) => {
 	const handleRemove = () => {
 		removeBlog(blog);
 	};
+	const increaseLikes = async (id, updatedBlog) => {
+		try{
+			dispatch(vote(id, updatedBlog));
+			const message = {
+				message:`you voted for '${blog.title}'`,
+				type: 'success'
+			};
+			dispatch(set(message, 5));
+		}catch(error){
+			const message = {
+				message:`${error}`,
+				type: 'error'
+			};
+			dispatch(set(message, 5));
+		}
+	};
+	const removeBlog = (blog) => {
+		try {
+			if (window.confirm(`Remove ${blog.title} by ${blog.author}`)) {
+				dispatch(remove(blog));
+				const message = {
+					message:`Removed ${blog.title} by ${blog.author}`,
+					type: 'success'
+				};
+				dispatch(set(message, 5));
+			}
+		}catch(error){
+			const message = {
+				message:`${error}`,
+				type: 'error'
+			};
+			dispatch(set(message, 5));
+		}
+	};
 	const display = () => {
 		if(details){
 			return(
@@ -31,7 +69,7 @@ const Blog = ({blog, increaseLikes, removeBlog}) => {
 					{blog.title} {blog.author}
 					<button onClick = {toggleDetails}>hide</button>
 					<p className = 'url'>{blog.url}</p>
-					<p className = 'likes'>likes {blog.likes}<button className = 'likeButton' onClick = {handleLikes}>likes</button></p>
+					<div className = 'likes'>likes {blog.likes}<button className = 'likesButton' onClick = {handleLikes}>likes</button></div>
 					<p>{blog.user.name}</p>
 					<button onClick = {handleRemove}>remove</button>
 				</div>

@@ -86,7 +86,7 @@ test('like event handler called twice', () => {
 	fireEvent.click(show);
 
 	component.debug();
-	const like = component.container.querySelector('.likeButton');
+	const like = component.container.querySelector('.likesButton');
 	fireEvent.click(like);
 	fireEvent.click(like);
 
