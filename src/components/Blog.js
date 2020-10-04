@@ -12,9 +12,10 @@ const Blog = ({blog}) => {
 	};
 
 	return (
-		<div className = 'blog' style={blogStyle}>
-			<Link to = {`/blogs/${blog.id}`}>{blog.title}</Link>
-		</div>
+		<tr className = 'blog' style={blogStyle}>
+			<td><Link to = {`/blogs/${blog.id}`}>{blog.title}</Link></td>
+			<td>{blog.author}</td>
+		</tr>
 	);};
 
 export default Blog;

@@ -1,11 +1,13 @@
 import React, {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
+import {useHistory} from 'react-router-dom';
 import {remove, vote, comment as com} from '../reducers/blogReducer';
 import {set} from '../reducers/notificationReducer';
 const BlogPage = ({blog}) => {
 	const [comment, setComment] =useState('');
 	const dispatch = useDispatch();
 	const user = useSelector(state => state.loggedInUser);
+	const history = useHistory();
 	if(!blog){
 		return null;
 	}
@@ -30,7 +32,7 @@ const BlogPage = ({blog}) => {
 		}catch(error){
 			const message = {
 				message:`${error}`,
-				type: 'error'
+				type: 'danger'
 			};
 			dispatch(set(message, 5));
 		}
@@ -47,11 +49,12 @@ const BlogPage = ({blog}) => {
 					type: 'success'
 				};
 				dispatch(set(message, 5));
+				history.push('/');
 			}
 		}catch(error){
 			const message = {
 				message:`${error}`,
-				type: 'error'
+				type: 'danger'
 			};
 			dispatch(set(message, 5));
 		}
@@ -82,11 +85,12 @@ const BlogPage = ({blog}) => {
 		}catch(error){
 			const message = {
 				message:`${error}`,
-				type: 'error'
+				type: 'danger'
 			};
 			dispatch(set(message, 5));
 		}
 	};
+
 	return (
 		<>
 			<h2>{blog.title}</h2>
@@ -108,6 +112,8 @@ const BlogPage = ({blog}) => {
 			})}
 		</>
 	);
+
+
 };
 
 export default BlogPage;

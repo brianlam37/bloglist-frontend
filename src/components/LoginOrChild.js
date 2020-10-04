@@ -3,6 +3,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import LoginForm from './LoginForm';
 import {getLoggedIn, logout} from '../reducers/loginReducer';
 import {Link} from 'react-router-dom';
+import {Navbar, Nav, Button} from 'react-bootstrap';
+
 const LoginOrChild = (props) => {
 	const user = useSelector(state => state.loggedInUser);
 	const dispatch = useDispatch();
@@ -14,11 +16,11 @@ const LoginOrChild = (props) => {
 		dispatch(logout());
 	};
 	const padding = {
-		paddingRight: 5
+		paddingRight: 5,
+		color:'#FFF'
 	};
 	const background = {
-		background:'#CCCCCC',
-		padding: 4
+		color:'#FFF',
 	};
 	const display = () => {
 		if(user === null)
@@ -28,14 +30,27 @@ const LoginOrChild = (props) => {
 		else{
 			return(
 				<>
-					<div style = {background}>
-						<Link to = '/' style = {padding}>blogs</Link>
-						<Link to = '/users' style = {padding}>users</Link>
-						{user.name} logged in <button onClick = {handleLogout}>logout</button>
-					</div>
+					<Navbar collapseOnSelect expand = 'lg' bg = 'dark' variant = 'dark'>
+						<Navbar.Toggle/>
+						<Navbar.Collapse id="responsive-navbar-nav">
+							<Nav className='mr-auto'>
+								<Nav.Link href='#' >
+									<Link to = '/' style = {padding}>blogs</Link>
+								</Nav.Link>
+								<Nav.Link href='#'>
+									<Link to = '/users' style = {padding}>users</Link>
+								</Nav.Link>
+								<Nav.Link disabled>
+									<div style = {background}>{user.name} logged in</div>
+								</Nav.Link>
+								<Button onClick = {handleLogout} variant = 'secondary'>logout</Button>
+							</Nav>
+						</Navbar.Collapse>
+					</Navbar>
 					<h2>blogs</h2>
 					{props.children}
 				</>
+
 			);
 		}
 	};

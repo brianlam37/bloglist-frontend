@@ -28,9 +28,9 @@ const App = () => {
 		dispatch(initBlog());
 	}, [dispatch]);
 
-	console.log('app', blogs, users);
+	//console.log('app', blogs, users, blog);
 	return (
-		<div>
+		<div className = 'container'>
 			<Notification/>
 			<Switch>
 				<LoginOrChild>

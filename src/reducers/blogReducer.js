@@ -41,9 +41,8 @@ export const vote = (id,blog) => {
 export const comment = (blog,comment) => {
 	return async dispatch => {
 		const result = await blogService.comment(blog.id, comment);
-		console.log(result);
 		dispatch({
-			type: 'comment',
+			type: 'COMMENT',
 			blog,
 			comment:result
 		});
@@ -71,7 +70,8 @@ const reducer = (state = [], action) => {
 			}).sort((a, b) => b.votes - a.votes);
 		}
 		case 'COMMENT':{
-			const newBlog = action.blog.comments.concat(action.comment);
+			const newComments = action.blog.comments.concat(action.comment);
+			const newBlog = {...action.blog, comments:newComments};
 			let target = copy.findIndex(blog => blog.id === action.blog.id);
 			if(target > -1){
 				copy[target] = newBlog;

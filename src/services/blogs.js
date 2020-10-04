@@ -9,7 +9,10 @@ const getAll = async () => {
 	const response = await axios.get(baseUrl);
 	return response.data;
 };
-
+const get = async (id) => {
+	const response = await axios.get(`${baseUrl}/${id}`);
+	return response.data;
+};
 const create = async newObject => {
 	const config = {
 		headers: {Authorization: token},
@@ -41,9 +44,8 @@ const comment = async (id,newObject) => {
 	const config = {
 		headers: {Authorization: token},
 	};
-	console.log(newObject);
 	const response = await axios.post(`${baseUrl}/${id}/comments`, newObject, config);
 	return response.data;
 };
 
-export default {getAll, setToken, create, update, remove, comment};
+export default {getAll, setToken, create, update, remove, comment, get};
